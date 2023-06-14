@@ -8,6 +8,7 @@ import { EditPostSchema } from "../dtos/posts/editPosts.dto";
 import { DeletePostsSchema } from "../dtos/posts/deletePost.dto";
 import { EditLikeSchema } from "../dtos/posts/editLike.dto";
 import { PostCommentSchema } from "../dtos/posts/addComment.dto";
+import { EditLikeCommentsSchema } from "../dtos/posts/editlikeComment.dto";
 
 export class postsControlle {
   constructor(private postsBusiness: PostsBusiness) {}
@@ -140,6 +141,30 @@ export class postsControlle {
       const output = await this.postsBusiness.addComment(input);
 
       res.status(201).send(output);
+    } catch (error) {
+      console.log(error);
+
+      if (error instanceof ZodError) {
+        res.status(400).send(error.issues);
+      } else if (error instanceof BaseError) {
+        res.status(error.statusCode).send(error.message);
+      } else {
+        res.status(500).send("Erro inesperado");
+      }
+    }
+  };
+
+  public editLikeComments = async (req: Request, res: Response) => {
+    try {
+      const input = EditLikeCommentsSchema.parse({
+        comment: req.body.comment,
+        like: req.body.like,
+        token: req.headers.authorization,
+      });
+
+      const output = await this.postsBusiness.likeDislikeComments(input);
+
+      res.status(200).send(output);
     } catch (error) {
       console.log(error);
 

@@ -135,15 +135,72 @@ export class PostDatabaseMock extends BaseDatabase {
     comment: string
   ): Promise<void> => {};
 
+  public findCommentsByComments = async (comment: string): Promise<any> => {
+    let commentDB;
+    return commentDB;
+  };
+
   public findCommentsByPostId = async (
     postId: string
-  ): Promise<{ name: string | null; comments: any }[]> => {
+  ): Promise<
+    { name: string | null; comments: any; like: number; deslikes: number }[]
+  > => {
     const output = [
       {
         name: "",
         comments: "",
+        like: 0,
+        deslikes: 0,
       },
     ];
     return output;
   };
+
+  public findLikeDislikeByComment = async (
+    user_id: string,
+    comment: string
+  ) => {
+    return null;
+  };
+
+  public deleteLikeDislikeComment = async (
+    user_id: string
+  ): Promise<void> => {};
+
+  public createLikeDislikeComment = async (
+    user_id: string,
+    comments: string,
+    like: boolean
+  ) => {
+    return like ? [1] : [0];
+  };
+
+  public updateLikesComment = async (
+    comment: string,
+    likes: number
+  ): Promise<number> => {
+    return likes;
+  };
+
+  public updateDislikesComment = async (
+    comment: string,
+    dislikes: number
+  ): Promise<number> => {
+    return dislikes;
+  };
+
+  public updateLikeDislikeComment = async (
+    likeDislikeId: string,
+    likeValue: boolean
+  ): Promise<void> => {};
+
+  public updateLikesAndDislikesComment = async (
+    comment: string,
+    likes: number,
+    dislikes: number
+  ) => {
+    return likes;
+  };
+
+  public deletePostsCommentsData = async (id: string): Promise<void> => {};
 }

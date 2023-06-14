@@ -12,9 +12,9 @@ const postsController = new postsControlle(
 );
 
 postsRouter.get("/", postsController.getPosts);
-postsRouter.post("/", postsController.createPosts)
-postsRouter.put("/:id", postsController.editPosts)
-postsRouter.delete("/:id", postsController.deletePost)
-postsRouter.put("/:id/like", postsController.editLike)
-postsRouter.post("/:id/comments", postsController.addComments)
-
+postsRouter.post("/", postsController.createPosts);
+postsRouter.put("/:id", postsController.editPosts);
+postsRouter.delete("/:id", postsController.deletePost);
+postsRouter.put("/:id/like", postsController.editLike);
+postsRouter.put("/comments/likes", postsController.editLikeComments);
+postsRouter.post("/:id/comments", postsController.addComments);

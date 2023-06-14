@@ -21,15 +21,19 @@ CREATE TABLE
         updated_at TEXT NOT NULL,
         FOREIGN KEY (creator_id) REFERENCES users(id)
     );
+
 CREATE TABLE
     posts_comments(
         user_id TEXT NOT NULL,
         post_id TEXT NOT NULL,
-        comments TEXT NOT NULL,
+        comments  TEXT PRIMARY KEY NOT NULL,
         FOREIGN KEY (user_id) REFERENCES users(id),
         FOREIGN KEY (post_id) REFERENCES posts(id)
     );
 
+ALTER TABLE posts_comments
+ADD COLUMN deslikes INT NOT NULL DEFAULT 0;
+    
 CREATE TABLE
     likes_dislikes(
         user_id TEXT NOT NULL,
@@ -38,6 +42,16 @@ CREATE TABLE
         FOREIGN KEY (user_id) REFERENCES users(id),
         FOREIGN KEY (post_id) REFERENCES posts(id)
     );
-    
 
-DROP TABLE posts
+CREATE TABLE
+    likes_dislikes_comments(
+        user_id INT NOT NULL,
+        comments TEXT NOT NULL,
+        like INT NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES users(id),
+        FOREIGN KEY (comments) REFERENCES posts_comments(comments)
+    );
+
+    DROP TABLE likes_dislikes_comments;
+
+    DELETE FROM likes_dislikes

@@ -28,6 +28,7 @@ import {
   PostCommentInputDTO,
   PostCommentOutPUTDTO,
 } from "../dtos/posts/addComment.dto";
+import { EditLikeCommentsInputDTO } from "../dtos/posts/editlikeComment.dto";
 
 export class PostsBusiness {
   constructor(
@@ -205,6 +206,8 @@ export class PostsBusiness {
       );
     }
 
+    await this.postsDatabase.deletePostsCommentsData(id);
+
     await this.postsDatabase.deletePostsData(id);
 
     const output: DeletePostsOutputDTO = {
@@ -301,6 +304,93 @@ export class PostsBusiness {
 
     const output: PostCommentOutPUTDTO = {
       message: "Comentario adicionado com sucesso!",
+    };
+
+    return output;
+  };
+
+  public likeDislikeComments = async (input: EditLikeCommentsInputDTO) => {
+    const { comment, like, token } = input;
+
+    const payload = this.tokenManager.getPayload(token);
+
+    if (!payload) {
+      throw new BadRequestError("Token is invalid");
+    }
+
+    const commentDB = await this.postsDatabase.findCommentsByComments(comment);
+
+    if (!commentDB) {
+      throw new BadRequestError("Comentario não existe");
+    }
+
+    const existingLikeDislike =
+      await this.postsDatabase.findLikeDislikeByComment(payload.id, comment);
+
+    if (existingLikeDislike) {
+      if (like && existingLikeDislike.like) {
+        await this.postsDatabase.deleteLikeDislikeComment(
+          existingLikeDislike.user_id
+        );
+
+        await this.postsDatabase.updateLikesComment(
+          commentDB.comments,
+          commentDB.likes - 1
+        );
+      } else if (!like && !existingLikeDislike.like) {
+        await this.postsDatabase.deleteLikeDislikeComment(
+          existingLikeDislike.user_id
+        );
+
+        await this.postsDatabase.updateDislikesComment(
+          commentDB.comments,
+          commentDB.deslikes - 1
+        );
+      } else if (like && !existingLikeDislike.like) {
+        await this.postsDatabase.updateLikeDislikeComment(
+          existingLikeDislike.user_id,
+          like
+        );
+        await this.postsDatabase.updateLikesAndDislikesComment(
+          commentDB.comments,
+          commentDB.likes + 1,
+          commentDB.deslikes - 1
+        );
+      } else if (!like && existingLikeDislike.like) {
+        await this.postsDatabase.updateLikeDislikeComment(
+          existingLikeDislike.user_id,
+          like
+        );
+        await this.postsDatabase.updateLikesAndDislikesComment(
+          commentDB.comments,
+          commentDB.likes - 1,
+          commentDB.deslikes + 1
+        );
+      }
+    } else {
+      await this.postsDatabase.createLikeDislikeComment(
+        payload.id,
+        commentDB.comments,
+        like
+      );
+
+      if (like) {
+        await this.postsDatabase.updateLikesComment(
+          commentDB.comments,
+          commentDB.likes + 1
+        );
+      } else {
+        await this.postsDatabase.updateDislikesComment(
+          commentDB.comments,
+          commentDB.deslikes + 1
+        );
+      }
+    }
+
+    const output: EditLikeOutputDTO = {
+      message: like
+        ? "Seu like foi computado com sucesso"
+        : "Seu dislike foi computado com sucesso",
     };
 
     return output;

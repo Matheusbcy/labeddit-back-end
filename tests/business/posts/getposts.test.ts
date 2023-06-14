@@ -55,7 +55,7 @@ describe("Testando getPosts", () => {
     const output = await postsBusiness.getPosts(input);
     expect(output).toEqual([
       {
-        comments: [{ comments: "", name: "" }],
+        comments: [{ comments: "", name: "", deslikes: 0, like: 0 }],
         content: "bla bla bla",
         createdAt: expect.any(String),
         creator: {
@@ -78,7 +78,7 @@ describe("Testando getPosts", () => {
     const output = await postsBusiness.getPosts(input);
     expect(output).toEqual([
       {
-        comments: [{ comments: "", name: "" }],
+        comments: [{ comments: "", name: "", deslikes: 0, like: 0 }],
         content: "bla bla bla",
         createdAt: expect.any(String),
         creator: {
@@ -91,7 +91,7 @@ describe("Testando getPosts", () => {
         updatedAt: expect.any(String),
       },
       {
-        comments: [{ comments: "", name: "" }],
+        comments: [{ comments: "", name: "", deslikes: 0, like: 0 }],
         content: "ble ble ble",
         createdAt: expect.any(String),
         creator: {

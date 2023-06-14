@@ -7,6 +7,7 @@ export class PostsDataBase extends BaseDatabase {
   public static USER_TABLE = "users";
   public static LIKE_DISLIKE = "likes_dislikes";
   public static POST_COMMENTS = "posts_comments";
+  public static LIKE_DISLIKE_COMMENTS = "likes_dislikes_comments";
 
   public findPosts = async (id: string | undefined) => {
     let postDB;
@@ -20,7 +21,7 @@ export class PostsDataBase extends BaseDatabase {
       const result: postsDB[] = await BaseDatabase.connection(
         PostsDataBase.POST_TABLE
       );
-      
+
       postDB = result;
     }
     return postDB;
@@ -107,6 +108,12 @@ export class PostsDataBase extends BaseDatabase {
       .where({ id });
   };
 
+  public deletePostsCommentsData = async (id: string) => {
+    await BaseDatabase.connection(PostsDataBase.POST_COMMENTS)
+      .delete()
+      .where({ post_id: id });
+  };
+
   // --------------------------------------------------------------------
 
   public findLikeDislikeByUserAndPost = async (
@@ -170,6 +177,8 @@ export class PostsDataBase extends BaseDatabase {
       .update({ likes, deslikes: dislikes });
   };
 
+  // ---------------------------------------------------------------------
+
   public insertCommentIntoDatabase = async (
     userId: string,
     postId: string,
@@ -184,7 +193,7 @@ export class PostsDataBase extends BaseDatabase {
 
   public findCommentsByPostId = async (postId: string) => {
     const comments = await BaseDatabase.connection(PostsDataBase.POST_COMMENTS)
-      .select("user_id", "comments")
+      .select("*")
       .where({ post_id: postId });
 
     const commentsWithNames = await Promise.all(
@@ -193,10 +202,93 @@ export class PostsDataBase extends BaseDatabase {
         return {
           name: userName ? userName : null,
           comments: comment.comments,
+          like: comment.likes,
+          deslikes: comment.deslikes,
         };
       })
     );
 
     return commentsWithNames;
+  };
+
+  public findCommentsByComments = async (comment: string) => {
+    const [commentDB] = await BaseDatabase.connection(
+      PostsDataBase.POST_COMMENTS
+    ).where({ comments: comment });
+
+    return commentDB;
+  };
+
+  // ---------------------------------------------------------------
+
+  public findLikeDislikeByComment = async (
+    user_id: string,
+    comment: string
+  ) => {
+    const result = await BaseDatabase.connection(
+      PostsDataBase.LIKE_DISLIKE_COMMENTS
+    )
+      .where("user_id", user_id)
+      .where("comments", comment)
+      .first();
+
+    if (result) {
+      return result;
+    } else {
+      return undefined;
+    }
+  };
+
+  public deleteLikeDislikeComment = async (user_id: string) => {
+    await BaseDatabase.connection(PostsDataBase.LIKE_DISLIKE_COMMENTS)
+      .where({ user_id: user_id })
+      .delete();
+  };
+
+  public createLikeDislikeComment = async (
+    user_id: string,
+    comments: string,
+    like: boolean
+  ) => {
+    return await BaseDatabase.connection(
+      PostsDataBase.LIKE_DISLIKE_COMMENTS
+    ).insert({
+      user_id,
+      comments,
+      like: like ? 1 : 0,
+    });
+  };
+
+  public updateLikesComment = async (comment: string, likes: number) => {
+    return await BaseDatabase.connection(PostsDataBase.POST_COMMENTS)
+      .where("comments", comment)
+      .update({ likes });
+  };
+
+  public updateDislikesComment = async (comment: string, dislikes: number) => {
+    return await BaseDatabase.connection(PostsDataBase.POST_COMMENTS)
+      .where("comments", comment)
+      .update({ deslikes: dislikes });
+  };
+
+  public updateLikeDislikeComment = async (
+    likeDislikeId: string,
+    likeValue: boolean
+  ) => {
+    const likeDislike = likeValue ? 1 : 0;
+
+    await BaseDatabase.connection(PostsDataBase.LIKE_DISLIKE_COMMENTS)
+      .where({ user_id: likeDislikeId })
+      .update({ like: likeDislike });
+  };
+
+  public updateLikesAndDislikesComment = async (
+    comment: string,
+    likes: number,
+    dislikes: number
+  ) => {
+    return await BaseDatabase.connection(PostsDataBase.POST_COMMENTS)
+      .where(" comments", comment)
+      .update({ likes, deslikes: dislikes });
   };
 }
