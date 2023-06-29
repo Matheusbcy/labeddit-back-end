@@ -244,6 +244,11 @@ export class PostsDataBase extends BaseDatabase {
       .where({ user_id: user_id })
       .delete();
   };
+  public deleteLikeDislikeCommentByComment = async (comment: string) => {
+    await BaseDatabase.connection(PostsDataBase.LIKE_DISLIKE_COMMENTS)
+      .where({ comments: comment })
+      .delete();
+  };
 
   public createLikeDislikeComment = async (
     user_id: string,

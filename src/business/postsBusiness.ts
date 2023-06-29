@@ -1,3 +1,4 @@
+import { PostsDataBase } from "./../database/postsDatabase";
 import { IdGenerator } from "./../services/idGenerator";
 import { TokenManager } from "./../services/TokenManager";
 import {
@@ -5,7 +6,6 @@ import {
   GetPostsOutputDTO,
 } from "../dtos/posts/getPosts.dto";
 import { BadRequestError } from "../errors/BadRequestError";
-import { PostsDataBase } from "../database/postsDatabase";
 import { Posts } from "../models/posts";
 import {
   CreatePostsInputDTO,
@@ -27,6 +27,7 @@ import {
 import {
   PostCommentInputDTO,
   PostCommentOutPUTDTO,
+  PostCommentSchema,
 } from "../dtos/posts/addComment.dto";
 import { EditLikeCommentsInputDTO } from "../dtos/posts/editlikeComment.dto";
 
@@ -205,6 +206,16 @@ export class PostsBusiness {
         "usuário não tem permissão para apagar esse post."
       );
     }
+
+    const postComments = await this.postsDatabase.findCommentsByPostId(id);
+
+    const coments = postComments.map((comment) => {
+      return comment.comments;
+    });
+
+    coments.map(async (comment) => {
+      await this.postsDatabase.deleteLikeDislikeCommentByComment(comment);
+    });
 
     await this.postsDatabase.deletePostsCommentsData(id);
 

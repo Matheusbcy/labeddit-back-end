@@ -167,6 +167,10 @@ export class PostDatabaseMock extends BaseDatabase {
     user_id: string
   ): Promise<void> => {};
 
+  public deleteLikeDislikeCommentByComment = async (
+    comment: string
+  ): Promise<void> => {};
+
   public createLikeDislikeComment = async (
     user_id: string,
     comments: string,
