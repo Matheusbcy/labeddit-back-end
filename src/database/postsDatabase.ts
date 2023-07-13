@@ -132,6 +132,14 @@ export class PostsDataBase extends BaseDatabase {
       .delete();
   };
 
+  public deleteLikeDislikeByPost = async (idPost: string) => {
+    await BaseDatabase.connection(PostsDataBase.LIKE_DISLIKE)
+      .where({
+        post_id: idPost,
+      })
+      .del();
+  };
+
   public createLikeDislike = async (
     user_id: string,
     post_id: string,

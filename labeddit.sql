@@ -54,4 +54,4 @@ CREATE TABLE
 
     DROP TABLE likes_dislikes_comments;
 
-    DELETE FROM likes_dislikes
+    DELETE FROM posts

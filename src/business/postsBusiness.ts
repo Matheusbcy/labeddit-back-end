@@ -217,6 +217,8 @@ export class PostsBusiness {
       await this.postsDatabase.deleteLikeDislikeCommentByComment(comment);
     });
 
+    await this.postsDatabase.deleteLikeDislikeByPost(id);
+
     await this.postsDatabase.deletePostsCommentsData(id);
 
     await this.postsDatabase.deletePostsData(id);

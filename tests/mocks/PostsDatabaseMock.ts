@@ -35,6 +35,8 @@ export class PostDatabaseMock extends BaseDatabase {
     }
   };
 
+  public deleteLikeDislikeByPost = async (idPost: string): Promise<void> => {};
+
   public findPostsByContent = async (
     content: string
   ): Promise<postsDB | undefined> => {

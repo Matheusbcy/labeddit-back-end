@@ -4,6 +4,8 @@
 
 O projeto labeddit é um aplicativo que permite aos usuários criar contas, fazer login, criar postagens, curtir postagens e comentar em postagens. Este repositório contém o código-fonte do back-end do projeto, que foi desenvolvido utilizando as seguintes tecnologias: ExpressJS, TypeScript e SQLite.
 
+Para verificar o repositorio do front-end [Clique aqui](https://github.com/Matheusbcy/labeddit-front-end)
+
 ### Funcionalidades
 
 O back-end oferece as seguintes funcionalidades:
