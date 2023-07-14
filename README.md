@@ -79,5 +79,6 @@ Os endpoint estão disponivel na documentação [Link da documentação](https:/
 
 Matheus Freitas - [Github Matheus Freitas](https://github.com/Matheusbcy)  
 
+Criando pull para correção
 
  
