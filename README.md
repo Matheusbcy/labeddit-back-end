@@ -73,7 +73,7 @@ O deploy do back-end está disponivel em: [Link do deploy](https://labeddit-back
 
 A API oferece os seguintes endpoints seguindo as boas práticas HTTP:
 
-Os endpoint estão disponivel na documentação [Link da documentação]()
+Os endpoint estão disponivel na documentação [Link da documentação](https://documenter.getpostman.com/view/24823033/2s946eBuAR#8fdfdd9d-dcc6-4afa-80c6-11c5eeecb303)
 
 ### Autor
 
